@@ -18,10 +18,9 @@ function fileUrlFromFilesProp(filesProp: any): FileUrl {
   if (!f) return null;
 
   const rawUrl = f.file?.url ?? f.external?.url ?? null;
-  if (!rawUrl || !rawUrl.startsWith("http")) return null;
-
-  return `/api/image?url=${encodeURIComponent(rawUrl)}`;
+  return rawUrl ?? null;
 }
+
 
 
 
