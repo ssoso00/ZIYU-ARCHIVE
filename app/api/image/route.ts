@@ -1,38 +1,41 @@
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const imageUrl = searchParams.get("url");
+  const url = searchParams.get("url");
 
-  if (!imageUrl) {
-    return new NextResponse("Missing url", { status: 400 });
+  if (!url) {
+    return new Response("Missing url", { status: 400 });
   }
 
   try {
-    const res = await fetch(imageUrl, {
+    const res = await fetch(url, {
       headers: {
-        // Notion 이미지 fetch 안정화
+        // ❗ 중요: Notion S3는 UA 없으면 차단하는 경우 있음
         "User-Agent": "Mozilla/5.0",
       },
       cache: "no-store",
     });
 
     if (!res.ok) {
-      return new NextResponse("Failed to fetch image", {
+      return new Response("Failed to fetch image", {
         status: res.status,
       });
     }
 
-    const contentType = res.headers.get("content-type") || "image/jpeg";
+    const contentType =
+      res.headers.get("content-type") || "image/jpeg";
+
     const buffer = await res.arrayBuffer();
 
-    return new NextResponse(buffer, {
+    return new Response(buffer, {
+      status: 200,
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "no-store",
+        "Cache-Control": "public, max-age=31536000, immutable",
       },
     });
   } catch (e) {
-    return new NextResponse("Image proxy error", { status: 500 });
+    return new Response("Image proxy error", { status: 500 });
   }
 }
