@@ -16,7 +16,8 @@ function fileUrlFromFilesProp(filesProp: any): FileUrl {
   const files = filesProp?.files as NotionFile[] | undefined;
   const f = first(files);
   if (!f) return null;
-  return f.file?.url ?? f.external?.url ?? null;
+const rawUrl = f.file?.url ?? f.external?.url ?? null;
+return rawUrl ? `/api/image?url=${encodeURIComponent(rawUrl)}` : null;
 }
 
 function plainFromTitle(prop: any): string {
