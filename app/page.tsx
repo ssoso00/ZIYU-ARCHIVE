@@ -14,6 +14,10 @@ import {
   getGuestbookMessages,
 } from "@/lib/notion";
 
+/** ✅ 핵심: Notion 임시 이미지 URL 만료 방지 (배포에서 Static으로 굳는 것 방지) */
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import PageClient from "./PageClient";
 
 export default async function Page() {
