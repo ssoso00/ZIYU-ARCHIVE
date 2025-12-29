@@ -470,10 +470,12 @@ className="card p-6 flex flex-col justify-between h-full"      >
 
       {/* ================= Gallery Modal (유지) ================= */}
       {galleryOpen && (
-        <div
-          className="fixed inset-0 z-[999] bg-black/40 backdrop-blur-sm flex items-center justify-center"
-          onClick={() => setGalleryOpen(false)}
-        >
+  <div
+    id="gallery-modal-overlay"
+    className="fixed inset-0 z-[999] bg-black/40 backdrop-blur-sm flex items-center justify-center"
+    onClick={() => setGalleryOpen(false)}
+  >
+
           <div
             onClick={(e) => e.stopPropagation()}
             className="

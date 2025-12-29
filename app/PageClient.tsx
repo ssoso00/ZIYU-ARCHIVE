@@ -58,13 +58,13 @@ export default function PageClient({
   return (
     <main className="hub-container">
       <header className="flex flex-col items-center gap-2">
-        <h1 className="text-[20px] text-slate-700 smallcaps">
+        <h1 className="text-[18x] text-slate-700 smallcaps">
           🐟 🫧🫧𝒁𝑰𝒀𝑼 𝑾𝑬𝑩 𝑨𝑹𝑪𝑯𝑰𝑽𝑬 🫧🫧ﾟ🐟
         </h1>
       </header>
 
       {/* 좌 / 우 컬럼 구조 그대로 */}
-      <section className="flex flex-col lg:flex-row gap-6 items-start">
+<section className="flex flex-row gap-6 items-start">
         {/* LEFT */}
         <div className="lg:flex-[7] flex flex-col gap-6">
           <ProfileCard data={profile} />

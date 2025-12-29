@@ -1,6 +1,126 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================
+   🌐 기본 변수 / 리셋
+========================= */
+
+:root {
+  --bg1: #f2fbff;
+  --bg2: #eaf5ff;
+  --bg3: #dfefff;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  color: #1f2c3d;
+  background: radial-gradient(
+    circle at top left,
+    var(--bg1) 0,
+    var(--bg2) 42%,
+    var(--bg3) 100%
+  );
+}
+
+/* =========================
+   🧱 전체 허브 레이아웃
+========================= */
+
+.hub-shell {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 56px 24px 80px;
+}
+
+.hub-container {
+  width: 1120px;       /* 🔑 PC 기준 고정 */
+  max-width: 1120px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =========================
+   📦 카드 공통 스타일
+========================= */
+
+.card {
+  background: #ffffff;
+  border-radius: 32px;
+  box-shadow: 0 18px 60px rgba(15, 76, 129, 0.20);
+}
+
+.smallcaps {
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+/* =====================================================
+   📱 MOBILE — PC 레이아웃 그대로 축소 (핵심)
+===================================================== */
+
+@media (max-width: 768px) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden; /* 🔑 화면 흔들림 방지 */
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* ❌ zoom 절대 사용 금지 */
+  /* ✅ transform 기반 축소 */
+  .hub-container {
+    width: 1120px;              /* PC 레이아웃 유지 */
+    transform: scale(0.82);     /* 네가 맞춘 비율 */
+    transform-origin: top center;
+  }
+}
+
+/* =====================================================
+   🖼️ GALLERY MODAL — PC와 동일 비율 유지
+===================================================== */
+
+#gallery-modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#gallery-modal-overlay > div {
+  width: min(1100px, 92vw);
+  height: min(720px, 80vh);
+  max-width: 1100px;
+  max-height: 720px;
+  border-radius: 28px;
+}
+
+/* 모바일에서도 PC 비율 유지 */
+@media (max-width: 768px) {
+  #gallery-modal-overlay > div {
+    width: min(1100px, 92vw);
+    height: min(720px, 80vh);
+  }
+}
+
 
 :root {
   --bg1: #f2fbff;
