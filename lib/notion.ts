@@ -17,9 +17,22 @@ function fileUrlFromFilesProp(filesProp: any): FileUrl {
   const f = first(files);
   if (!f) return null;
 
-const rawUrl = f.file?.url ?? f.external?.url ?? null;
-return rawUrl ? `/api/image?url=${encodeURIComponent(rawUrl)}` : null;
+  const rawUrl = f.file?.url ?? f.external?.url ?? null;
+  if (!rawUrl) return null;
+
+  // ✅ 이미 프록시된 URL이면 그대로 사용
+  if (rawUrl.startsWith("/api/image")) {
+    return rawUrl;
+  }
+
+  // ✅ Notion S3 / external 만 프록시
+  if (rawUrl.startsWith("http")) {
+    return `/api/image?url=${encodeURIComponent(rawUrl)}`;
+  }
+
+  return null;
 }
+
 
 
 function plainFromTitle(prop: any): string {
