@@ -1291,5 +1291,8 @@ body {
   .lg\:flex-\[7\]{
     flex: 7;
   }
+  .lg\:flex-row{
+    flex-direction: row;
+  }
 }
 
