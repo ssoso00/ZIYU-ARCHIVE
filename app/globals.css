@@ -161,8 +161,3 @@ body {
   box-shadow: 0 18px 60px rgba(15, 76, 129, 0.20);
 }
 
-.smallcaps {
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-}
-body { outline: 10px solid red !important; }
