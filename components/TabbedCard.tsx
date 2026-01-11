@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState, useEffect, useRef } from "react";
+import NotionImage from "@/components/NotionImage"; // ✅ 추가
+
 import type {
   GalleryData,
   GuestbookSummary,
@@ -307,7 +309,7 @@ export default function TabbedCard({
 
       <div className="mt-4 space-y-4 max-h-[260px] overflow-y-auto">
         {(item.images ?? []).map((src, i) => (
-          <img
+         <NotionImage
             key={i}
             src={src}
             alt="memo"
@@ -522,8 +524,7 @@ className="card p-6 flex flex-col justify-between h-full"      >
                       >
                         <div className="w-full h-[120px] rounded-xl bg-slate-100 overflow-hidden">
                           {item.image ? (
-                            <img
-                              src={item.image}
+                           <NotionImage src={item.image}
                               alt={item.title}
                               className="w-full h-full object-cover"
                             />
@@ -545,8 +546,7 @@ className="card p-6 flex flex-col justify-between h-full"      >
               {/* Right main image (✅ 노션 연결) */}
               <div className="flex-1 p-6 flex items-center justify-center overflow-hidden">
                 {selectedGallery?.image ? (
-                  <img
-                    src={selectedGallery.image}
+                <NotionImage src={selectedGallery.image}
                     alt={selectedGallery.title}
                     className="max-w-full max-h-full rounded-[24px] object-contain bg-slate-50"
                   />
