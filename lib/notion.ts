@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client";
+import { unstable_noStore as noStore } from "next/cache";
 
 const token = process.env.NOTION_TOKEN;
 export const notion = new Client({ auth: token });
@@ -17,12 +18,29 @@ function fileUrlFromFilesProp(filesProp: any): FileUrl {
   const f = first(files);
   if (!f) return null;
 
-  const rawUrl = f.file?.url ?? f.external?.url ?? null;
-  return rawUrl ?? null;
+  const raw = f.file?.url ?? f.external?.url ?? null;
+  if (!raw) return null;
+
+  // ✅ 이미 프록시 적용된 값이면 중복 방지
+  if (raw.startsWith("/api/image?src=")) return raw;
+
+  // ✅ Notion/S3 URL은 항상 프록시로
+  try {
+    const u = new URL(raw);
+    const notionLike =
+      u.hostname === "prod-files-secure.s3.us-west-2.amazonaws.com" ||
+      u.hostname === "secure.notion-static.com" ||
+      u.hostname.endsWith(".amazonaws.com");
+
+    if (notionLike) {
+      return `/api/image?src=${encodeURIComponent(raw)}`;
+    }
+  } catch {
+    // URL이 아니면 그대로
+  }
+
+  return raw;
 }
-
-
-
 
 function plainFromTitle(prop: any): string {
   const t = prop?.title;
@@ -57,6 +75,7 @@ export type ProfileData = {
 };
 
 export async function getProfile(): Promise<ProfileData | null> {
+  noStore();
   const db = process.env.NOTION_DB_PROFILE;
   if (!db || !token) return null;
 
@@ -96,6 +115,7 @@ export type MusicData = {
 };
 
 export async function getMusicList(): Promise<MusicData[]> {
+  noStore();
   const db = process.env.NOTION_DB_MUSIC;
   if (!db || !token) return [];
 
@@ -130,6 +150,7 @@ export type GalleryData = {
 };
 
 export async function getGalleryHighlight(): Promise<GalleryData | null> {
+  noStore();
   const db = process.env.NOTION_DB_GALLERY;
   if (!db || !token) return null;
 
@@ -154,6 +175,7 @@ export type MemoItem = {
 };
 
 export async function getMemoList(): Promise<MemoItem[]> {
+  noStore();
   const db = process.env.NOTION_DB_MEMO;
   if (!db || !token) return [];
 
@@ -174,10 +196,11 @@ export async function getMemoList(): Promise<MemoItem[]> {
       dateText = `${dd} ${month}`;
     }
 
+    // ✅ 중요: 메모 이미지들도 프록시로 변환해야 만료 문제 해결됨
     const files = getProp(p, "image")?.files ?? [];
     const images: string[] = files
-      .map((f: any) => f.file?.url || f.external?.url)
-      .filter(Boolean);
+      .map((f: any) => fileUrlFromFilesProp({ files: [f] }))
+      .filter(Boolean) as string[];
 
     return {
       id: page.id,
@@ -206,6 +229,7 @@ export type GuestbookSummary = {
 };
 
 export async function getGuestbookSummary(): Promise<GuestbookSummary | null> {
+  noStore();
   const db = process.env.NOTION_DB_GUESTBOOK;
   if (!db || !token) return null;
 
@@ -238,12 +262,12 @@ export async function getGuestbookSummary(): Promise<GuestbookSummary | null> {
   };
 }
 
-/* -------------------- GUESTBOOK MESSAGES (✅ children까지 불러오기) -------------------- */
+/* -------------------- GUESTBOOK MESSAGES (children까지) -------------------- */
 
 export type GuestbookMessage = {
   id: string;
-  title: string; // 페이지 제목(날짜/시간)
-  content: string; // 본문(children)
+  title: string;
+  content: string;
   createdAt: string;
   role: "user" | "admin";
 };
@@ -254,20 +278,12 @@ function getTitleKeyFromProps(props: any): string | null {
 }
 
 function getRoleFromProps(props: any): "user" | "admin" {
-  // role 속성이 없다면 기본 user
-  const roleProp =
-    props?.role ??
-    props?.Role ??
-    props?.ROLE ??
-    null;
-
+  const roleProp = props?.role ?? props?.Role ?? props?.ROLE ?? null;
   const name = roleProp?.select?.name;
   return name === "admin" ? "admin" : "user";
 }
 
 async function fetchAllBlocksPlainText(pageId: string): Promise<string> {
-  // children(블록) 텍스트를 가능한 범위에서 전부 합침
-  // (Paragraph / Heading / Quote 등 rich_text 기반은 대부분 커버)
   const texts: string[] = [];
   let cursor: string | undefined = undefined;
 
@@ -296,6 +312,7 @@ async function fetchAllBlocksPlainText(pageId: string): Promise<string> {
 }
 
 export async function getGuestbookMessages(): Promise<GuestbookMessage[]> {
+  noStore();
   const db = process.env.NOTION_DB_GUESTBOOK;
   if (!db || !token) return [];
 
@@ -307,7 +324,6 @@ export async function getGuestbookMessages(): Promise<GuestbookMessage[]> {
 
   const pages: any[] = res.results as any[];
 
-  // setting 페이지 제외(제목이 setting인 row)
   const filtered = pages.filter((pg) => {
     const props = pg?.properties ?? {};
     const titleKey = getTitleKeyFromProps(props);
@@ -343,6 +359,7 @@ export type GalleryItem = {
 };
 
 export async function getGalleryList(): Promise<GalleryItem[]> {
+  noStore();
   const db = process.env.NOTION_DB_GALLERY;
   if (!db || !token) return [];
 
