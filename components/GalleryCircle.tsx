@@ -1,4 +1,5 @@
 "use client";
+import NotionImage from "@/components/NotionImage"; // ✅ 추가
 
 type Props = {
   /** 중앙 고정 카드 이미지 (Notion: card image) */
@@ -21,9 +22,8 @@ export default function GalleryCircle({ image }: Props) {
           flex items-center justify-center
         "
       >
-        {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+            {image ? (
+          <NotionImage
             src={image}
             alt="cardimage"
             className="
