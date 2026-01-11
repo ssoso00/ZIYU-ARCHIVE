@@ -165,3 +165,4 @@ body {
   letter-spacing: 0.28em;
   text-transform: uppercase;
 }
+body { outline: 10px solid red !important; }
