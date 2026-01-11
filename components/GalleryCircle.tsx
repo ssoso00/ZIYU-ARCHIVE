@@ -1,4 +1,5 @@
 "use client";
+
 import NotionImage from "@/components/NotionImage"; // ✅ 추가
 
 type Props = {
@@ -8,7 +9,6 @@ type Props = {
 
 export default function GalleryCircle({ image }: Props) {
   return (
-    /* 부모에서 준 높이를 그대로 사용 */
     <div className="w-full h-full flex items-center justify-center">
       <div
         className="
@@ -22,7 +22,7 @@ export default function GalleryCircle({ image }: Props) {
           flex items-center justify-center
         "
       >
-            {image ? (
+        {image ? (
           <NotionImage
             src={image}
             alt="cardimage"
