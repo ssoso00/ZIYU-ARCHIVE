@@ -2,8 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MusicData } from "@/lib/notion";
-import NotionImage from "@/components/NotionImage"; // ✅ 추가
-
 declare global {
   interface Window {
     YT: any;
@@ -180,7 +178,7 @@ export default function MusicCard({ list }: { list: MusicData[] }) {
       {/* Cover */}
       <div className="w-[220px] h-[220px] rounded-[36px] overflow-hidden bg-slate-100">
         {currentTrack?.cover ? (
-         <NotionImage src={currentTrack.cover}
+         <img src={currentTrack.cover}
             alt="cover"
             className="w-full h-full object-cover"
           />

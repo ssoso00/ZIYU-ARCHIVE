@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ProfileData } from "@/lib/notion";
-import NotionImage from "@/components/NotionImage"; // ✅ 추가
 
 
 export default function ProfileCard({ data }: { data: ProfileData | null }) {
@@ -30,7 +29,7 @@ export default function ProfileCard({ data }: { data: ProfileData | null }) {
               <div className="w-[180px] h-[240px] rounded-[36px] overflow-hidden flex-shrink-0">
                 {data.profileImage && (
                   // eslint-disable-next-line @next/next/no-img-element
-                 <NotionImage src={data.profileImage}
+               <img src={data.profileImage}
                     alt="profile"
                     className="w-full h-full object-cover"
                   />
@@ -94,7 +93,7 @@ export default function ProfileCard({ data }: { data: ProfileData | null }) {
                   <div className="w-full h-[220px] rounded-2xl overflow-hidden bg-slate-100">
                     {pair.image && (
                       // eslint-disable-next-line @next/next/no-img-element
-                     <NotionImage src={pair.image}
+                    <img src={pair.image}
                         alt={pair.name}
                         className="w-full h-full object-cover"
                       />
