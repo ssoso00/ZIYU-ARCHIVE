@@ -11,14 +11,16 @@ import {
   getGuestbookSummary,
   getMemoList,
   getGalleryList,
-  getGuestbookMessages, // ✅ 추가
+  getGuestbookMessages,
 } from "@/lib/notion";
 
-/** ✅ 핵심: Notion 임시 이미지 URL 만료 방지 (배포에서 Static으로 굳는 것 방지) */
+/** ✅ Notion 임시 이미지 URL 만료 방지 */
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export default async function Page() {
+import PageClient from "./PageClient";
+
+async function PageContent() {
   const [
     profile,
     musicList,
@@ -26,7 +28,7 @@ export default async function Page() {
     memoList,
     guestbook,
     galleryList,
-    guestbookMessages, // ✅ 추가
+    guestbookMessages,
   ] = await Promise.all([
     getProfile(),
     getMusicList(),
@@ -34,7 +36,7 @@ export default async function Page() {
     getMemoList(),
     getGuestbookSummary(),
     getGalleryList(),
-    getGuestbookMessages(), // ✅ 추가
+    getGuestbookMessages(),
   ]);
 
   return (
@@ -57,7 +59,7 @@ export default async function Page() {
                 memoList={memoList}
                 gallery={gallery}
                 guestbook={guestbook}
-                guestbookMessages={guestbookMessages} // ✅ 방명록 메시지 전달
+                guestbookMessages={guestbookMessages}
                 galleryList={galleryList}
               />
             </div>
@@ -84,5 +86,13 @@ export default async function Page() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function Page() {
+  return (
+    <PageClient emoji="💙" durationMs={1800}>
+      <PageContent />
+    </PageClient>
   );
 }
